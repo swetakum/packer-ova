@@ -1,0 +1,8 @@
+{
+  "sudo_user": "root",
+  "sudo_pass": "password",
+  "headless": "true",
+  "memory": "8000",
+  "cpus": "4",
+  "agent": "/hello",
+}
