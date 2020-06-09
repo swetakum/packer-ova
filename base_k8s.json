@@ -2,7 +2,7 @@
   "builders": [
     {
       "type": "virtualbox-iso",
-      "output_directory": "./output-base-centos/",
+      "output_directory": "./output-base-k8s-centos/",
       "boot_command": [
         "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
       ],
@@ -40,6 +40,13 @@
           "{{user `cpus`}}"
         ]
       ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo '{{user `sudo_pass`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "scripts/install_k8s.sh"
     }
   ]
 }
