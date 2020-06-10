@@ -3,5 +3,6 @@
   "sudo_pass": "password",
   "headless": "true",
   "memory": "8000",
-  "cpus": "4"
+  "cpus": "4",
+  "application_path": "C:\\Users\\sweta\\packer-ova\\application"
 }

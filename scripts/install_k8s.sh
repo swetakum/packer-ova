@@ -3,13 +3,6 @@ yum -y install epel-release
 yum --enablerepo=epel -y install sshpass
 yum -y install firewalld
 
-yum -y groupinstall 'Development Tools'
-yum -y install openssl-devel libffi libffi-devel gcc
-yum -y install net-snmp net-snmp-utils
-yum -y install python3 python3-pip python3-devel
-pip3 install ansible==2.3.0
-pip3 install markupsafe httplib2 requests jproperties
-
 echo "------- Disable SELinux --------"
 setenforce 0
 sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
@@ -58,18 +51,12 @@ sed -i '/swap/d' /etc/fstab
 swapoff -a
 
 echo "---- Initialize Kubernetes ----"
-# kubeadm init --pod-network-cidr=192.168.0.0/16
 kubeadm init
 mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown $(id -u):$(id -g) $HOME/.kube/config
 
-# cat <<EOF > /etc/NetworkManager/conf.d/calico.conf
-# [keyfile]
-# unmanaged-devices=interface-name:cali*;interface-name:tunl*
-# EOF
-
-# kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
+echo "------ Setup Pod Network ------"
 export kubever=$(kubectl version | base64 | tr -d '\n')
 kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
 kubectl taint nodes --all node-role.kubernetes.io/master-
