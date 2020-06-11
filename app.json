@@ -2,13 +2,13 @@
   "builders": [
     {
       "type": "virtualbox-ovf",
-      "source_path": "./output-base-k8s-centos/base-centos-7-x86_64-k8s.ova",
-      "output_directory": "./output-k8s-centos/",
+      "source_path": "./output-base-k8s/base-64-k8s.ova",
+      "output_directory": "./output-app-k8s/",
       "vm_name": "app-centos-7_{{isotime \"2006-01-02_03-04-05\"}}",
       "format": "ova",
-      "ssh_username": "{{user `sudo_user`}}",
-      "ssh_password": "{{user `sudo_pass`}}",
-      "shutdown_command": "echo '{{user `sudo_pass`}}' | sudo -S /sbin/halt -h -p"
+      "ssh_username": "{{user `user`}}",
+      "ssh_password": "{{user `pass`}}",
+      "shutdown_command": "echo '{{user `pass`}}' | sudo -S /sbin/halt -h -p"
     }
   ],
   "provisioners": [
@@ -25,7 +25,7 @@
     },
     {
       "type": "shell",
-      "execute_command": "echo '{{user `sudo_pass`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo '{{user `pass`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "script": "scripts/install_nginx.sh"
     }
   ]

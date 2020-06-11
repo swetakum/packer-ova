@@ -10,7 +10,7 @@
       "disk_size": 102400,
       "boot_wait": "10s",
       "guest_os_type": "RedHat_64",
-      "headless": "{{user `headless`}}",
+      "headless": "true",
       "http_directory": "http",
       "iso_urls": [
         "CentOS-7-x86_64-Minimal-1908.iso",
@@ -18,14 +18,14 @@
       ],
       "iso_checksum_type": "sha256",
       "iso_checksum": "659691c28a0e672558b003d223f83938f254b39875ee7559d1a4a14c79173193",
-      "ssh_username": "{{user `sudo_user`}}",
-      "ssh_password": "{{user `sudo_pass`}}",
+      "ssh_username": "{{user `user`}}",
+      "ssh_password": "{{user `pass`}}",
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
-      "shutdown_command": "echo '{{user `sudo_pass`}}' | sudo -S /sbin/halt -h -p",
+      "shutdown_command": "echo '{{user `pass`}}' | sudo -S /sbin/halt -h -p",
       "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
       "virtualbox_version_file": ".vbox_version",
-      "vm_name": "base-centos-7-x86_64-k8s",
+      "vm_name": "base-centos-7-x86_64",
       "vboxmanage": [
         [
           "modifyvm",

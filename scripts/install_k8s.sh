@@ -7,6 +7,18 @@ echo "------- Disable SELinux --------"
 setenforce 0
 sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
+echo "---- Setup Kubernetes Repo ----"
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+sslverify=0
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+
 echo "------ Update Firewalls --------"
 systemctl enable firewalld
 systemctl start firewalld
@@ -26,18 +38,6 @@ EOF
 modprobe br_netfilter
 echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
 echo 1 > /proc/sys/net/ipv4/ip_forward
-
-echo "---- Setup Kubernetes Repo ----"
-cat <<EOF > /etc/yum.repos.d/kubernetes.repo
-[kubernetes]
-name=Kubernetes
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-enabled=1
-gpgcheck=1
-sslverify=0
-repo_gpgcheck=1
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-EOF
 
 echo "-- Install kubelet, kubeadm, and kubectl --"
 yum install -y kubeadm kubectl kubelet docker
@@ -66,15 +66,12 @@ sleep 20s
 echo "-------- Kubernetes Node state ---------"
 export KUBECONFIG=/etc/kubernetes/kubelet.conf
 kubectl get nodes -o wide
-kubectl get services --all-namespaces
-kubectl get pods --all-namespaces
 
 echo "---------- Install helm -----------"
-yum -y install wget curl
+yum -y install wget
 wget https://get.helm.sh/helm-v3.2.1-linux-amd64.tar.gz
 tar -zxvf helm-v3.2.1-linux-amd64.tar.gz
 chmod u+x linux-amd64/helm
 mv -f linux-amd64/helm /usr/local/bin/helm
 cp /usr/local/bin/helm /bin/helm
 which helm
-helm version
